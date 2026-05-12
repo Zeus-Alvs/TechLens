@@ -15,7 +15,7 @@ Antes de começar, você precisa ter instalado:
 ### 1. Clonar o repositório
 
 ```bash
-git clone <url-do-seu-repositorio>
+git clone https://github.com/Zeus-Alvs/TechLens.git
 cd TechLens
 ```
 
