@@ -59,12 +59,15 @@ O frontend rodará em: http://localhost:3000
 
 ```text
 TechLens/
-├── backend/             # API FastAPI e Integração Redis
+├── backend/             # API FastAPI e Banco de Dados
 │   ├── docker-compose.yml
 │   ├── main.py
 │   ├── database.py
+│   ├── schemas.py
 │   └── requirements.txt
 ├── frontend/            # Interface Next.js (App Router)
-│   ├── src/
-│   └── package.json
-└── .gitignore           # Filtro para não subir venv e node_module
+│   ├── app/             # Rotas e páginas do sistema
+│   ├── public/          # Imagens e assets estáticos
+│   ├── package.json
+│   └── next.config.ts   # Configurações do Next
+└── .gitignore           # Filtro de arquivos ignorados pelo Git
