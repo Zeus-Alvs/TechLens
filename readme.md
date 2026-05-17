@@ -53,6 +53,10 @@ npm install
 npm run dev
 ```
 
+## Baixar icones
+```bash
+npm install lucide-react
+```
 O frontend rodará em: http://localhost:3000
 
 ## Estrutura do Projeto
@@ -67,6 +71,8 @@ TechLens/
 │   └── requirements.txt
 ├── frontend/            # Interface Next.js (App Router)
 │   ├── app/             # Rotas e páginas do sistema
+|      ── components/    # Componentes da landing page
+|            ── dashboard/  # Componentes do Dashboard
 │   ├── public/          # Imagens e assets estáticos
 │   ├── package.json
 │   └── next.config.ts   # Configurações do Next
