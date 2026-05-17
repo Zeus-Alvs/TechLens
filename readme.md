@@ -72,7 +72,9 @@ TechLens/
 ├── frontend/            # Interface Next.js (App Router)
 │   ├── app/             # Rotas e páginas do sistema
 |      ── components/    # Componentes da landing page
-|            ── dashboard/  # Componentes do Dashboard
+|       ── dashboard/    # Componentes do Dashboard
+|    ├── home/page.tsx   # Tela Inicial
+|    ├── page.tsx        # Landing Page
 │   ├── public/          # Imagens e assets estáticos
 │   ├── package.json
 │   └── next.config.ts   # Configurações do Next
