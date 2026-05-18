@@ -1,6 +1,6 @@
-# TechLens - Sistema de Gerenciamento CRUD com Redis
+# TechLens - Sistema de Gerenciamento Fullstack com Redis
 
-Este projeto é um sistema Fullstack composto por um backend em **FastAPI**, frontend em **Next.js** e banco de dados **Redis** rodando via Docker.
+Este projeto é um monitor de telemetria composto por um backend em **FastAPI**, frontend em **Next.js** (com Cache Global) e banco de dados **Redis** rodando via Docker.
 
 ## Pré-requisitos
 Antes de começar, você precisa ter instalado:
@@ -10,72 +10,57 @@ Antes de começar, você precisa ter instalado:
 
 ---
 
-## Como rodar o projeto (Passo a Passo)
+## Como rodar o projeto
 
-### 1. Clonar o repositório
-
+### 1. Banco de Dados (Redis) e Servidor (FastAPI)
+Abra um terminal na pasta `backend`:
 ```bash
-git clone https://github.com/Zeus-Alvs/TechLens.git
-cd TechLens
-```
-
-### 2. Subir o Banco de Dados (Redis)
-Certifique-se de que o Docker Desktop está aberto.
-
-```bash
-cd backend
 docker-compose up -d
-```
-
-### 3. Configurar o Backend (Python)
-
-```bash
 python -m venv venv
 
-# Ativar venv (Windows)
-.\venv\Scripts\activate
-
-# Ativar venv (Linux/Mac)
-source venv/bin/activate
+# Ativar venv
+.\venv\Scripts\activate      # Windows
+source venv/bin/activate    # Linux/Mac
 
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
+*O backend rodará em: http://localhost:8000*
 
-O backend rodará em: http://localhost:8000
-
-### 4. Configurar o Frontend (Next.js)
-Abra outro terminal:
-
+### 2. Rodar o Simulador de Telemetria
+Abra outro terminal na pasta `backend`, ative o ambiente virtual (`venv`) e execute:
 ```bash
-cd frontend
+python simulador.py
+```
+
+### 3. Interface Web (Next.js)
+Abra outro terminal na pasta `frontend`:
+```bash
 npm install
 npm run dev
 ```
+*O frontend rodará em: http://localhost:3000 (todas as dependências, incluindo `lucide-react`, são auto-instaladas no `npm install`)*
 
-## Baixar icones
-```bash
-npm install lucide-react
-```
-O frontend rodará em: http://localhost:3000
+---
 
 ## Estrutura do Projeto
 
 ```text
 TechLens/
-├── backend/             # API FastAPI e Banco de Dados
-│   ├── docker-compose.yml
-│   ├── main.py
-│   ├── database.py
-│   ├── schemas.py
-│   └── requirements.txt
-├── frontend/            # Interface Next.js (App Router)
-│   ├── app/             # Rotas e páginas do sistema
-|      ── components/    # Componentes da landing page
-|       ── dashboard/    # Componentes do Dashboard
-|    ├── home/page.tsx   # Tela Inicial
-|    ├── page.tsx        # Landing Page
-│   ├── public/          # Imagens e assets estáticos
-│   ├── package.json
-│   └── next.config.ts   # Configurações do Next
-└── .gitignore           # Filtro de arquivos ignorados pelo Git
+├── backend/                  # API FastAPI e Simulador
+│   ├── docker-compose.yml    # Redis Container
+│   ├── main.py               # Endpoints REST e Autenticação
+│   ├── database.py           # Conexão Redis
+│   ├── schemas.py            # Validação Pydantic
+│   ├── simulador.py          # Daemon de Telemetria Circular
+│   └── requirements.txt      # Dependências Python
+└── frontend/                 # Next.js App Router
+    ├── app/
+    │   ├── context/          # TelemetryContext (Cache Global)
+    │   ├── components/       # Componentes Visuais e Dashboard
+    │   ├── home/             # Página Principal (/home)
+    │   ├── layout.tsx        # Layout Geral
+    │   └── page.tsx          # Landing Page (Lente Magnética)
+    ├── package.json          # Dependências (lucide-react, etc.)
+    └── next.config.ts        # Configurações Next.js
+```
