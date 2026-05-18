@@ -41,7 +41,7 @@ export default function LandingPage() {
 
       {/* Footer*/}
       <footer className="py-10 text-center border-t border-slate-900 text-slate-600 text-sm">
-        © 2024 TechLens Monitoring System. Todos os direitos reservados.
+        © 2026 TechLens Monitoring System • Engineered by Eduarda Belles & Zeus Machado.
       </footer>
     </main>
   );

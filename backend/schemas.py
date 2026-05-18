@@ -1,42 +1,55 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Dict, Any, List
 
-class RackMonitor(BaseModel):
-    # ID opcional na criação, pois o backend irá gerar
+# ==========================================
+# MODELOS DE AUTENTICAÇÃO E USUÁRIO
+# ==========================================
+class UserAuth(BaseModel):
+    username: str = Field(..., description="Nome de usuário visível")
+    email: str = Field(..., description="E-mail de login")
+    password: str = Field(..., description="Senha do usuário")
+    role: Optional[str] = Field("user", description="Nível de acesso: 'admin' ou 'user'")
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+# ==========================================
+# MODELO DE DISPOSITIVOS (HARDWARE)
+# ==========================================
+class DeviceModel(BaseModel):
     id: Optional[str] = None
+    name: str = Field(..., description="Ex: SSD Kingston 1TB")
+    category: str = Field(..., description="Ex: Armazenamento, GPU, CPU")
+    serial: str = Field(..., description="S/N ou IP")
+    image: str = Field(..., description="Caminho da imagem")
+    status: str = Field("online", description="Status de energia da peça")
     
-    # "Título" -> Nome identificador do Rack
-    nome_identificador: str = Field(..., description="Nome de identificação do ativo na rede")
-    
-    # "Autor" -> Responsável técnico ou Empresa Cliente
-    cliente_vinculado: str = Field(..., description="Empresa ou departamento responsável pelo rack")
-    
-    # "Categoria" -> Tipo de Rack ou Servidor
-    tipo_equipamento: str = Field(..., description="Categoria do equipamento")
-    
-    # "Ano" -> Ano de Instalação/Ativação
-    ano_instalacao: int = Field(..., description="Ano em que o ativo foi instalado")
-    
-    # "Quantidade" -> Capacidade ocupada ou unidades U
-    u_ocupados: int = Field(..., description="Quantidade de unidades rack (U) ocupadas") 
-    
-    # "Status" -> Estado atual
-    status_sistema: str = Field(..., description="Status de operação atual do rack")
-
-    # Campos Extras para o "Monitoramento" (Hipotéticos)
-    ip_gerenciamento: str = Field(..., description="IP principal para acesso ao gerenciamento do rack")
-    temperatura_atual: Optional[float] = Field(25.5, description="Temperatura em Celsius medida pelos sensores")
+    # DIVISÃO DA ARQUITETURA DE DADOS
+    dados_maximos: Dict[str, Any] = Field(..., description="Capacidades máximas de fábrica (ex: Clock)")
+    dados_tempo_real: Optional[Dict[str, Any]] = Field(default={}, description="Métricas atuais medidas pelo simulador")
 
     class Config:
         json_schema_extra = {
             "example": {
-                "nome_identificador": "RACK-01-SALA-A",
-                "cliente_vinculado": "TechLens Solutions Ltda",
-                "tipo_equipamento": "Rack de Colocation 42U",
-                "ano_instalacao": 2026,
-                "u_ocupados": 12,
-                "status_sistema": "Online / Estável",
-                "ip_gerenciamento": "192.168.10.50",
-                "temperatura_atual": 22.5
+                "name": "Processador Core i9",
+                "category": "CPU",
+                "serial": "SN-INTEL-9921",
+                "image": "/images/i9.png",
+                "dados_maximos": {
+                    "Clock": "5000MHz",
+                    "Consumo": "240W"
+                }
             }
         }
+
+# ==========================================
+# MODELO DE COLEÇÕES (COMPUTADORES)
+# ==========================================
+class CollectionModel(BaseModel):
+    id: Optional[str] = None
+    name: str = Field(...)
+    description: str = Field(...)
+    owner: Optional[str] = Field(default=None, description="E-mail do usuário proprietário")
+    status: str = Field("online", description="Status de energia: 'online' ou 'offline'")
+    devices: Optional[List[DeviceModel]] = Field(default=[], description="Lista de peças vinculadas")

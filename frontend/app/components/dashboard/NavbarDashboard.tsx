@@ -1,11 +1,41 @@
 "use client";
+import { useState, useEffect } from "react";
 import { LogOut, User, Bell } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-interface NavbarDashboardProps {
-  user: string;
-}
+export default function NavbarDashboard() {
+  const [username, setUsername] = useState("Administrador");
+  const router = useRouter();
 
-export default function NavbarDashboard({ user }: NavbarDashboardProps) {
+  useEffect(() => {
+    // Carrega o username salvo no localStorage no login
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Dispara o logout no backend
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Erro ao realizar logout no servidor:", err);
+    } finally {
+      // Limpa a sessão local e redireciona
+      localStorage.clear();
+      router.push("/");
+    }
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-slate-950/50 backdrop-blur-xl border-b border-slate-800/60">
       <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
@@ -24,14 +54,15 @@ export default function NavbarDashboard({ user }: NavbarDashboardProps) {
 
         {/* Lado Direito: Usuário e Ações */}
         <div className="flex items-center gap-6">
-          <button className="text-slate-400 hover:text-white transition-colors relative">
+          {/* Ícone de Notificações - Ocultado para MVP (Task 2) */}
+          <button className="text-slate-400 hover:text-white transition-colors relative hidden">
             <Bell size={20} />
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-slate-950"></span>
           </button>
 
           <div className="flex items-center gap-3 pl-6 border-l border-slate-800">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-white leading-none">Olá, {user}</p>
+              <p className="text-sm font-medium text-white leading-none">Olá, {username}</p>
               <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1 text-right">Administrador</p>
             </div>
             
@@ -42,6 +73,7 @@ export default function NavbarDashboard({ user }: NavbarDashboardProps) {
 
             {/* Botão Sair */}
             <button 
+              onClick={handleLogout}
               className="ml-2 p-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
               title="Sair do Sistema"
             >
