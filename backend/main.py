@@ -8,7 +8,21 @@ from typing import Optional
 from schemas import DeviceModel, CollectionModel, UserAuth, UserLogin
 from database import get_redis
 
-app = FastAPI(title="TechLens Engine", description="Monitoramento de Hardware com Autenticação e Coleções")
+app = FastAPI(
+    title="TechLens Engine",
+    description="Monitoramento de Hardware com Autenticação e Coleções"
+)
+
+# ==========================================
+# ROTA PRINCIPAL
+# ==========================================
+@app.get("/", tags=["Home"])
+def home():
+    return {
+        "status": "online",
+        "api": "TechLens Engine",
+        "docs": "/docs"
+    }
 
 app.add_middleware(
     CORSMiddleware,
